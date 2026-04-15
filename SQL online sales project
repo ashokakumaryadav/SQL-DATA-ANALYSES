@@ -1,1 +1,22 @@
 
+📌 Data Preprocessing
+1️⃣ Handling Missing Values
+Identified missing/null values in the dataset.
+Treated missing data using:
+Removal of null records (if minimal)
+Imputation (mean/median/mode where required)
+2️⃣ Removing Duplicates
+Checked for duplicate records.
+Removed duplicate entries to ensure data accuracy.
+3️⃣ Data Cleaning
+Standardized column names.
+Removed irrelevant or inconsistent data.
+4️⃣ Feature Preparation
+Removed the date column as it is not required for this analysis.
+Selected relevant features for prediction.
+payement method  based on cards
+select Payment_Method ,count(*)as total_payment_by from [Online Sales Data] group by Payment_Method
+
+🎯 Final Goal
+
+To build a model that can accurately predict online sales prices across different countries, helping businesses optimize pricing strategy and decision-making.
