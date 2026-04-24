@@ -1,1 +1,103 @@
+# 📊 Iran War Oil & Gas Price Analysis (SQL Project)
 
+## 📌 Project Overview
+This project analyzes the impact of the Iran war on oil and gas prices using SQL. It includes data cleaning, trend analysis, and advanced SQL techniques like window functions.
+
+---
+
+## 🎯 Objectives
+- Identify missing values in datasets  
+- Handle NULL values using SQL  
+- Detect duplicate records  
+- Analyze oil & gas price trends  
+- Apply advanced SQL window functions  
+- Compare daily and category-based data  
+
+---
+
+## 📂 Dataset Used
+- iran_war_gas_prices_by_state  
+- iran_war_key_events_timeline  
+- iran_war_oil_prices_daily_2026  
+
+---
+
+## 🧱 SQL Operations Performed
+
+### 🔍 1. View Data
+```sql
+USE iran_war;
+
+SELECT * FROM iran_war_gas_prices_by_state;
+SELECT * FROM iran_war_key_events_timeline;
+SELECT * FROM iran_war_oil_prices_daily_2026;
+
+use iran_war
+select * from iran_war_gas_prices_by_state
+select * from iran_war_key_events_timeline
+select * from iran_war_oil_prices_daily_2026
+------
+---Q1 finding null values ?
+----SQL
+select * from iran_war_gas_prices_by_state where region is null
+or state is null or gas_price_mar19_2026 is null or gas_price_prewar_feb27 is null
+or gas_price_jan08_2026 is null;
+----
+
+---Q2 null values fillup?
+----SQL
+update iran_war_gas_prices_by_state set price_vs_national_avg =(select avg(price_vs_national_avg) from iran_war_gas_prices_by_state) where price_vs_national_avg is null;
+----
+---Q3 duplicate  value check and removed ?
+---SQL
+select gas_price_prewar_feb27, count(*) as db from iran_war_gas_prices_by_state group by gas_price_prewar_feb27 having count(*)>1;
+---
+---Q4 windows function ?
+---SQL
+select gas_price_mar19_2026 , ROW_NUMBER () OVER (ORDER BY gas_price_mar19_2026 desc )as ran_number from iran_war_oil_prices_daily_2026
+---
+---Q5 LAN FUNCTION (IT IS USE WHEN U WANT TO COMPARE DATA FROM PERVIOUS DAYS )
+---SQL
+select date,category,LAG (category) over (order by category ) as per from iran_war_key_events_timeline
+---
+---Q6 find the pick  price 
+---SQL
+select date, wti_usd_barrel ,strait_hormuz_daily_ships , RANK() OVER (ORDER BY wti_usd_barrel desc ) as pricerank from iran_war_oil_prices_daily_2026
+---
+-- -Q7 compare events within same category ?
+---SQL
+select date , category , source , RANK()  OVER (partition by category order by source desc) from iran_war_key_events_timeline
+---
+---Q8 DESK RANK ?
+---SQL
+select date , strait_hormuz_daily_ships, DENSE_RANK() OVER (ORDER BY strait_hormuz_daily_ships) as desk_rank from iran_war_oil_prices_daily_2026
+---
+---Q9 sum function?
+---SQL
+select date, strait_hormuz_daily_ships, sum( strait_hormuz_daily_ships) over (order by date) as dt from iran_war_oil_prices_daily_2026
+---
+--Q10 FINDING AVG
+---SQL
+--select  date, brent_usd_barrel  ,avg(brent_usd_barrel) over (order by brent_usd_barrel) as brent  from iran_war_oil_prices_daily_2026;
+---
+Q11 MEAN VALUE ?
+---SQL
+select date,brent_price_that_day, min(brent_price_that_day) over(order by date) as running_total from iran_war_key_events_timeline;
+---Q12  lead NEXT VALUE ?
+---SQL
+SELECT date, dubai_usd_barrel, LEAD(dubai_usd_barrel) over (order by date) as usd from iran_war_oil_prices_daily_2026
+---
+---Q13 coalsece ( for handling null value and fill 0)?
+--- SQL
+select date,COALESCE(LEAD(brent_price_that_day)  over (order by date),100)  from iran_war_key_events_timeline;
+---
+---Q14 CASE STATEMENT ( IF , ESLE INSIDE SUM )?
+---SQL
+select case when region ='west' then 1 else 0 end from iran_war_gas_prices_by_state;
+----
+Q15 USE CASE FUNCTION AND EXPLAIN THAT ?
+---SQL
+
+select case when  war_day >2 then 1 else 0 end 
+from iran_war_key_events_timeline; 
+----
