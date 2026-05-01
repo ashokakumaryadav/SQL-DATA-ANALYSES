@@ -1,1 +1,210 @@
 
+# Project Title
+
+#Ecommerce Sales Data Analysis
+
+# Overview
+
+This project analyzes ecommerce sales data to uncover insights about product performance, regional profitability, and sales trends. The analysis is performed using SQL queries on the ecommerce_sales_data table.
+
+##Objectives
+Identify top-performing products by sales
+Find regions generating maximum profit per product
+Classify products based on quantity sold
+Rank products based on sales volume
+Analyze order dates with highest quantity sold
+Detect duplicate order dates
+📂 Dataset Description
+
+Table: ecommerce_sales_data
+
+Columns used:
+
+Product_Name
+Region
+Sales
+Profit
+Quantity
+Order_Date
+Category
+🛠️ Tools & Technologies
+SQL Server (T-SQL)
+-----------------------
+🔍 SQL Analysis & Queries
+------
+Q1: Which product has maximum sales?
+---sql 
+select product_Name,max(sales) as maxx_sales from ecommerce_sales_data group by Product_Name order by maxx_sales desc;
+------
+Keyboard	10782
+Laptop	10773
+Monitor	10665
+Printer	10656
+Mouse	10593
+Smartwatch	10530
+Smartphone	10458
+Tablet	10188
+Camera	10188
+Headphones	10134
+-------
+
+--Q2 WHICH REGION HAS GIVEN MAX PROFIT ON  PRODUCT?
+--SQL
+---
+SELECT Product_Name, region ,MAX(profit) AS MAXX from ecommerce_sales_data group by Product_Name, Region order by MAXX desc;
+---
+Laptop	South	2946.92993164063
+Keyboard	South	2843.5400390625
+Monitor	North	2799.47998046875
+Camera	South	2797.44995117188
+Tablet	South	2794.88989257813
+Laptop	West	2771.48999023438
+Camera	North	2752.84008789063
+Smartphone	South	2729.60009765625
+Camera	East	2651.84008789063
+Monitor	West	2620.580078125
+Smartphone	East	2595.330078125
+Monitor	South	2581.06005859375
+Camera	West	2566.01000976563
+Laptop	East	2526.27001953125
+Tablet	North	2523.669921875
+Smartwatch	West	2519.92993164063
+Mouse	North	2488.68994140625
+Printer	East	2443.6201171875
+Printer	West	2416.92993164063
+Keyboard	West	2391.8798828125
+Mouse	South	2349.67993164063
+Printer	South	2316.03002929688
+Keyboard	North	2270.080078125
+-----
+
+--Q3 USE CASE STAEMENT AND FIND WHICH QUNTITY HAS MAX SOLD WITH REVENUE?
+--SQL
+-----
+SELECT Product_name,sales, case when Quantity >4 then 'feverite product' else 'just required' end from ecommerce_sales_data;
+----
+Printer	3640	just required
+Mouse	1197	feverite product
+Tablet	5865	feverite product
+Mouse	786	just required
+Mouse	509	just required
+Camera	524	just required
+Headphones	6167	feverite product
+Camera	3059	feverite product
+Smartwatch	5526	feverite product
+Printer	672	feverite product
+Monitor	7074	feverite product
+Smartwatch	502	just required
+Tablet	7462	feverite product
+Smartphone	4205	feverite product
+Camera	570	just required
+Headphones	441	just required
+Mouse	7469	feverite product
+Tablet	2212	just required
+Tablet	740	feverite product
+Headphones	662	just required
+Mouse	5712	feverite product
+Smartwatch	2739	just required
+Keyboard	1400	feverite product
+Printer	3477	just required
+Camera	3475	feverite product
+Laptop	6138	feverite product
+Camera	3665	feverite product
+Printer	2372	just required
+Laptop	1382	just required
+Laptop	1126	just required
+Printer	1376	feverite product
+Mouse	988	just required
+Laptop	10773	feverite product
+Headphones	3252	just required
+------
+--Q4 I WANT RANK THE PRODUCT WHICH SOLD MAX ?
+--- SQL
+----
+SELECT Product_name, max(quantity)as maxx_quantity, ROW_NUMBER() OVER (ORDER BY Quantity desc) as rnk  from ecommerce_sales_data GROUP BY Product_Name, Quantity;
+-------
+Smartphone	9	1
+Camera	9	2
+Smartwatch	9	3
+Laptop	9	4
+Headphones	9	5
+Tablet	9	6
+Printer	9	7
+Mouse	9	8
+Monitor	9	9
+Keyboard	9	10
+Tablet	8	11
+Smartphone	8	12
+Camera	8	13
+Keyboard	8	14
+Headphones	8	15
+Printer	8	16
+Mouse	8	17
+Monitor	8	18
+Laptop	8	19
+Smartwatch	8	20
+Laptop	7	21
+Headphones	7	22
+Keyboard	7	23
+----------------------------------------------------------------
+--Q5 I WANT ON WHICH order DARE  HAS MAX QUANTITY SOLD WITH SALES AND PROFIT 
+-----
+SQL
+---
+select order_Date,category,sales,profit,max(Quantity)as maxx_quantity from ecommerce_sales_data group by Order_Date,Category,Sales,Profit order by maxx_quantity desc;
+------
+2022-01-01	Electronics	9234	2523.669921875	9
+2022-01-04	Accessories	9378	1740.96997070313	9
+2022-01-04	Electronics	711	200.110000610352	9
+2022-01-14	Electronics	2205	410.010009765625	9
+2022-01-16	Electronics	7650	2130.82006835938	9
+2022-01-16	Accessories	7425	1533.71997070313	9
+2022-01-21	Electronics	8055	2300.169921875	9
+2022-01-25	Electronics	5337	1575.98999023438	9
+2022-01-24	Electronics	6606	759.549987792969	9
+2022-02-10	Electronics	1350	189.130004882813	9
+2022-02-11	Office	4212	552.960021972656	9
+2022-02-11	Office	7290	841.070007324219	9
+2022-02-13	Accessories	4914	1160.44995117188	9
+2022-02-16	Accessories	7362	1866.65002441406	9
+2022-02-23	Accessories	3186	483.220001220703	9
+2022-03-05	Electronics	3132	443.269989013672	9
+2022-03-10	Accessories	1764	417.950012207031	9
+2022-03-10	Electronics	3078	285.049987792969	9
+2022-03-18	Accessories	8370	1525.80004882813	9
+2022-03-18	Electronics	9810	1666.9599609375	9
+2022-03-21	Accessories	5283	1550.30004882813	9
+2022-03-25	Electronics	3699	276.070007324219	9
+2022-04-02	Electronics	5526	595.280029296875	9
+---------------------------------------------------------
+
+--Q6 I WANT WE HAVE DUBLICATE ORDER_ DATE OR NOT ?
+--
+SQL
+-------
+SELECT  order_date ,count(*) as total from ecommerce_sales_data  GROUP BY Order_Date having count(*)>1 order by total desc; 
+-----
+2022-02-13	Accessories	4914	1160.44995117188	9
+2022-02-16	Accessories	7362	1866.65002441406	9
+2022-02-23	Accessories	3186	483.220001220703	9
+2022-03-05	Electronics	3132	443.269989013672	9
+2022-03-10	Accessories	1764	417.950012207031	9
+2022-03-10	Electronics	3078	285.049987792969	9
+2022-03-18	Accessories	8370	1525.80004882813	9
+2022-03-18	Electronics	9810	1666.9599609375	9
+2022-03-21	Accessories	5283	1550.30004882813	9
+2022-03-25	Electronics	3699	276.070007324219	9
+2022-04-02	Electronics	5526	595.280029296875	9
+2022-04-09	Electronics	9117	1780.52001953125	9
+2022-04-11	Accessories	4752	1415.65002441406	9
+2022-04-11	Electronics	8145	2384.419921875	9
+2022-04-14	Electronics	8496	2182.419921875	9
+2022-04-15	Accessories	7884	2054.02001953125	9
+2022-04-15	Electronics	3321	689.640014648438	9
+2022-04-26	Electronics	5850	1511.06005859375	9
+2022-04-27	Electronics	2691	761.159973144531	9
+2022-05-05	Electronics	8010	763.320007324219	9
+2022-05-09	Office	10656	961.299987792969	9
+2022-05-11	Electronics	8586	700.369995117188	9
+2022-05-11	Office	7506	827.169982910156	9
+------
