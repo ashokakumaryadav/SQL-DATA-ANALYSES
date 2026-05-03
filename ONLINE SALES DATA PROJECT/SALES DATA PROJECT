@@ -1,1 +1,136 @@
+# 📊 Online Sales Data Analysis (SQL Project)
+## 📌 Project Overview
+This SQL project focuses on analyzing an online sales dataset to perform data cleaning, detect anomalies, and extract meaningful business insights
+## 🎯 Objectives
+- Identify and handle missing (NULL) values  
+- Detect duplicate transaction records  
+- Analyze payment methods used by customers  
+- Identify top-selling and second-highest selling products  
+
+---
+
+## 📂 Dataset Details
+- Database Used: `sales`
+- Tables:
+  - `Online Sales Data`
+  - `online_sales_data2`
+📈 Key Insights
+Missing values were found in the region column and handled
+Duplicate transaction IDs were identified
+Most frequently used payment methods were analyzed
+Top-selling and second-highest selling products were identified
+## 📊 Data Dictionary
+
+### 📁 Table: Online Sales Data
+
+| Column Name      | Data Type | Description |
+|-----------------|----------|------------|
+| Transaction_ID  | INT      | Unique ID for each transaction |
+| Product_Name    | VARCHAR  | Name of the product sold |
+| Product_Category| VARCHAR  | Category of the product |
+| Units_Sold      | INT      | Number of units sold |
+| Unit_Price      | DECIMAL  | Price per unit |
+| Total_Revenue   | DECIMAL  | Total revenue generated |
+| Region          | VARCHAR  | Sales region (can contain NULL values) |
+| Payment_Method  | VARCHAR  | Payment method used (Cash, Card, UPI, etc.) |
+| Order_Date      | DATE     | Date of transaction |
+
+---
+
+### 📁 Table: online_sales_data2
+
+| Column Name     | Data Type | Description |
+|----------------|----------|------------|
+| Transaction_ID | INT      | Transaction ID (Foreign Key) |
+| Customer_ID    | INT      | Unique customer identifier |
+| Customer_Name  | VARCHAR  | Name of the customer |
+| Payment_Method | VARCHAR  | Payment method used |
+| Order_Status   | VARCHAR  | Status of order (Completed, Pending, Cancelled) |
+Tools & Technologies
+SQL ( SQL Server)
+GitHub
+### Q1- --Q1-find null value ?
+---sql
+select * from [Online Sales Data] where region is null;
+---no null values 
+---
+
+### Q2 replace null value with 1 if u have ?
+--sql
+update [Online Sales Data] set region =123 where region is null;
+---update null value with 1 
+---
+### Q3 finding dublicate values ?
+---sql
+select Transaction_ID, COUNT(*) dublicate_id  FROM [Online Sales Data] group by Transaction_ID  having count(*)>1;
+---No any duplicate values 
+---
+
+### Q4 how many types of payment-method used ?
+---sql
+select Payment_Method ,count(*)as total_payment_by from [Online Sales Data] group by Payment_Method;
+---120	Credit Card
+---40	Debit Card
+---80	PayPal
+---
+
+### Q5 which top 5  product maximum sold ?
+---sql
+select  top 5 Product_Name, Units_Sold, COUNT(Units_Sold),max(Units_sold) from [Online Sales Data] group by Product_Name,Units_Sold order by Units_Sold desc;
+---Hanes ComfortSoft T-Shirt	10	1	10
+---Gap Essential Crewneck T-Shirt	6	1	6
+---Nike Air Force 1	6	1	6
+---Spalding NBA Street Basketball	6	1	6
+---Yeti Rambler Tumbler	6	1	6
+----
+
+### Q6 2ND HIGHEST PRODUCT SOLD ?
+---sql
+SELECT Product_Name,Units_Sold FROM (SELECT Product_Name,Units_Sold, DENSE_RANK() OVER (ORDER BY Units_Sold DESC) AS rnk from [Online Sales Data])T where rnk=2;
+---Yeti Rambler Tumbler	6
+Nike Air Force 1	6
+Spalding NBA Street Basketball	6
+Gap Essential Crewneck T-Shirt	6
+---
+### Q7 TOP 3 HIGHEST PRODUCT SOLD WITH REVENUE ?
+----sql
+SELECT TOP 3  Product_Category, Product_name, SUM(Total_Revenue) as totam_amount_revecived from [Online Sales Data] group by Product_Category, Product_Name ORDER BY totam_amount_revecived DESC;
+---Electronics	Canon EOS R5 Camera	3899.98999023438
+---Home Appliances	LG OLED TV	2599.97998046875
+---Electronics	MacBook Pro 16-inch	2499.98999023438
+---
+
+### Q8 I HAVE 2 TABLE 1- ONLINE SALES DATA AND 2- ONLINE SALS DATE 2 I WANT TOP 2  PAYMENT CATTEGORY FROM  PAYMENT METHOD? using join?
+SELECT top 2 s.Product_category,p.Payment_Method from [Online Sales Data]s join online_sals_data2 p on
+s.Transaction_ID = p.Transaction_ID;
+---Electronics	Credit Card
+---Home Appliances	PayPal
+---sql
+
+ Q9 using condion statement and i want  top 6 unit sold is more than 2 and paymnet method should be credit card ?
+select top 6 s.date,s.product_name,s.units_sold from online_sals_data2 s join [Online Sales Data] r on s.Transaction_ID=r.Transaction_ID where s.Units_Sold>2 and  r.Payment_Method= 'Credit Card';
+---2024-01-04	The Da Vinci Code	4
+---2024-01-06	Wilson Evolution Basketball	5
+---2024-01-12	Babolat Pure Drive Tennis Racket	3
+---2024-01-16	Salt, Fat, Acid, Heat by Samin Nosrat	3
+---2024-01-18	Manduka PRO Yoga Mat	4
+---2024-01-24	Adidas FIFA World Cup Football	3
+---
+Conclusion
+
+This project demonstrates how SQL can be used effectively for:
+
+Data cleaning
+Data validation
+Business analysis
+
+
+
+
+
+
+
+
+
+
 
